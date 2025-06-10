@@ -1,4 +1,5 @@
 import socket
+import ipaddress
 from openpyxl import Workbook
 
 def resolve_addresses(input_lines):
@@ -22,10 +23,21 @@ def resolve_addresses(input_lines):
             # Ricava l'IP da un hostname (se line è un hostname)
             # Se line fosse già un IP, il metodo restituirà l'IP invariato
             ip_address = socket.gethostbyname(line)
-            # Ricava l'hostname a partire dall'IP
-            hostname = socket.gethostbyaddr(ip_address)[0]
         except socket.error:
+            # Se l'input sembra un indirizzo IP ma non è risolvibile,
+            # manteniamo il valore originale per mostrarlo nel risultato
+            try:
+                ipaddress.ip_address(line)
+                ip_address = line
+            except ValueError:
+                ip_address = ""
             hostname = "Campo non trovato"
+        else:
+            # Ricava l'hostname a partire dall'IP ottenuto
+            try:
+                hostname = socket.gethostbyaddr(ip_address)[0]
+            except socket.error:
+                hostname = "Campo non trovato"
 
         results.append((line, ip_address, hostname))
 
