@@ -25,3 +25,5 @@ Se la risoluzione non è possibile, nella colonna "Hostname" apparirà la scritt
 Per installare `openpyxl`, se non presente:
 ```bash
 pip install openpyxl
+```
+
